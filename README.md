@@ -1,5 +1,5 @@
-# Homework: GitHub Pages for CV
-**วิชา Interactive Computer Graphics**
+# GitHub Pages for CV
+
 
 ---
 
