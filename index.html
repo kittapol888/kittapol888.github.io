@@ -206,6 +206,17 @@ window.addEventListener('keydown',(event)=>{
     else if (event.code === 'KeyD') { spriteX += 4; }
 });
 
+// Interaction: Follow Mouse
+canvas.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    
+    // Map display coordinates to internal canvas resolution (200x200)
+    spriteX = Math.round(x * (canvas.width / rect.width));
+    spriteY = Math.round(y * (canvas.height / rect.height));
+});
+
 function animate(){
   
   drawRectFilled(0, 0, canvas.width - 1, canvas.height - 1, 255, 255, 255);
