@@ -1,14 +1,141 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
-    <title>Interactive computer graphic</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Computer Graphics Portfolio - CV</title>
+    <style>
+        /* Modern Dark Theme Style */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .main-title {
+            color: #61afef;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Card Layout */
+        .cv-card, .canvas-card {
+            background-color: #252526;
+            border: 1px solid #3c3c3c;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+
+        h2 {
+            color: #98c379;
+            margin-top: 0;
+            border-bottom: 2px solid #3c3c3c;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: #e5c07b;
+        }
+
+        p, li {
+            line-height: 1.6;
+            font-size: 1.05rem;
+        }
+
+        .badge {
+            background-color: #2c313c;
+            color: #61afef;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin: 4px;
+            border: 1px solid #4b5263;
+        }
+
+        /* Canvas Container */
+        .canvas-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        /* จัดระเบียบให้ตำแหน่ง Canvas  */
+        canvas {
+            background-color: #000000;
+            border: 3px solid #61afef;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            margin-top: 20px;
+            cursor: crosshair;
+        }
+    </style>
 </head>
 <body>
 
-<canvas id="canvas" width="200" height="200" style="width:500px; height:500px; border:1px solid #000; image-rendering: pixelated;"></canvas>
+    <h1 class="main-title">Interactive Computer Graphics Showcase</h1>
 
-<script>
-const canvas = document.getElementById('canvas');
+    <div class="container">
+        
+        <!-- ================= [ฝั่งที่ 1: หน้าต่าง CV ] ================= -->
+        <div class="cv-card">
+            <h2>👤 ข้อมูลผู้จัดทำ (CV)</h2>
+            <p><strong>ชื่อ-นามสกุล:</strong> นายกฤตพล เสงี่ยมงาม</p>
+            <p><strong>รหัสนิสิต:</strong> 6721600951 </p>
+            <p><strong>หมู่เรียน:</strong> 700</p>
+            
+            <h3>🛠️ Skills & Technologies</h3>
+            <div>
+                <span class="badge">HTML5 </span>
+                <span class="badge">JavaScript </span>
+                <span class="badge">Computer Graphics</span>
+                <span class="badge">Git / GitHub</span>
+            </div>
+
+            <h3>🎮 Keyboard & Mouse Interaction</h3>
+            <p>สามารถทดสอบระบบการแปลงพิกัดรูปภาพ (Transformation) บนหน้าจอฝั่งขวาได้ดังนี้ครับ:</p>
+            <ul>
+                <li><strong>Translation:</strong> ขยับเมาส์หรือกดปุ่ม W, A, S, D เพื่อเลื่อนตำแหน่ง Sprite 24-bit ตามพิกัดตัวชี้</li>
+                <li><strong>Scaling / Rotation:</strong> กดปุ่มลูกศรเพื่อหมุนหรือปรับขนาด Sprite</li>
+            </ul>
+        </div>
+
+        <!-- ================= [ฝั่งที่ 2: หน้าต่างแสดงงานกราฟิก] ================= -->
+        <div class="canvas-card">
+            <h2>🖥️ หัวข้อ: 24-bit Sprite Transformation</h2>
+            
+            <canvas id="canvas" width="500" height="500"></canvas>
+            
+        </div>
+
+    </div>
+
+    <script>
+        // โค้ด JavaScript/Canvas เดิมของนายทั้งหมด วางยาวลงไปตรงนี้ได้เลยครับ...
+        const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const imageData = ctx.createImageData(canvas.width, canvas.height);
 const pixels = imageData.data; 
@@ -229,8 +356,7 @@ function animate(){
 }
 
 animate();
+    </script>
 
-
-</script>
 </body>
 </html>
