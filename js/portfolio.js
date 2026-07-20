@@ -181,6 +181,11 @@ let degree = 0;
 
 // Interaction: Translate (W, A, S, D), Rotate (Left/Right), Scale (Up/Down)
 window.addEventListener('keydown',(event)=>{
+
+    if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.code)) {
+        event.preventDefault();
+    }
+    
     // Rotate
     if (event.code === 'ArrowLeft') { degree -= 5; }
     else if (event.code === 'ArrowRight') { degree += 5; }
