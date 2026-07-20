@@ -2,7 +2,7 @@ const splash = document.getElementById('splash-screen');
 const splashContent = document.getElementById('splash-content');
 let isSplashActive = true;
 let isExploding = false; 
-let isAssembling = true; // 🔥 [NEW] สถานะเริ่มแรก: สั่งให้เศษชิ้นส่วนวิ่งมารวมร่างกันก่อน
+let isAssembling = true; // สถานะเริ่มแรก: สั่งให้เศษชิ้นส่วนวิ่งมารวมร่างกันก่อน
 
 // Setup ฉากหลัง 3D
 const cyberCanvas = document.getElementById('splash-canvas');
@@ -26,17 +26,17 @@ const boxData = [];
 const dummy = new THREE.Object3D(); 
 
 for(let i = 0; i < COUNT; i++){
-    // 🎯 1. คำนวณตำแหน่งเป้าหมายหลัก (จุดที่จะฟอร์มตัวโคจรรอบจุดศูนย์กลาง)
+    //  1. คำนวณตำแหน่งเป้าหมายหลัก (จุดที่จะฟอร์มตัวโคจรรอบจุดศูนย์กลาง)
     const targetX = (Math.random() - .5) * 20;
     const targetY = (Math.random() - .5) * 20;
     const targetZ = (Math.random() - .5) * 20;
     const targetPosition = new THREE.Vector3(targetX, targetY, targetZ);
 
-    // 🚀 2. คำนวณตำแหน่งเกิด (ดีดให้เศษชิ้นส่วนกระจัดกระจายไปไกลๆ นอกจอในตอนแรก)
+    //  2. คำนวณตำแหน่งเกิด (ดีดให้เศษชิ้นส่วนกระจัดกระจายไปไกลๆ นอกจอในตอนแรก)
     // คูณด้วย 30-50 เพื่อให้อยู่ลึกเข้าไปในอวกาศแล้วค่อยบินเข้ามา
     const spawnPosition = targetPosition.clone().normalize().multiplyScalar(35 + Math.random() * 25);
 
-    // 💥 3. เวกเตอร์ทิศทางสำหรับการระเบิดออกตอนโดนคลิก
+    //  3. เวกเตอร์ทิศทางสำหรับการระเบิดออกตอนโดนคลิก
     const velocity = targetPosition.clone().normalize();
     const speed = 0.25 + Math.random() * 0.35; 
     velocity.multiplyScalar(speed);
@@ -66,16 +66,16 @@ function animateSplash(t){
     for(let i = 0; i < COUNT; i++) {
         const data = boxData[i];
 
-        // 🔄 หมุนอิสระในตัวเองแต่ละกล่อง
+        //  หมุนอิสระในตัวเองแต่ละกล่อง
         data.rotation.x += data.rotSpeed.x;
         data.rotation.y += data.rotSpeed.y;
         data.rotation.z += data.rotSpeed.z;
 
         if (isAssembling) {
-            // 🔥 [MODE: รวมร่าง] ค่อยๆ ดูดเศษชิ้นส่วนจากนอกจอกลับเข้ามาหาพิกัดเป้าหมายด้วยความนุ่มนวล (Lerp 4% ต่อเฟรม)
+            //  [MODE: รวมร่าง] ค่อยๆ ดูดเศษชิ้นส่วนจากนอกจอกลับเข้ามาหาพิกัดเป้าหมายด้วยความนุ่มนวล (Lerp 4% ต่อเฟรม)
             data.currentPosition.lerp(data.targetPosition, 0.04);
         } else if (isExploding) {
-            // 💥 [MODE: ระเบิด] สั่งให้พุ่งกระจายออกจากศูนย์กลางรอบทิศทาง
+            //  [MODE: ระเบิด] สั่งให้พุ่งกระจายออกจากศูนย์กลางรอบทิศทาง
             data.currentPosition.add(data.velocity);
         }
 
@@ -85,7 +85,7 @@ function animateSplash(t){
         mesh.setMatrixAt(i, dummy.matrix);
     }
     
-    // 🌐 หมุนกลุ่มก้อนวัตถุทั้งหมดตามแนววงโคจรหลัก
+    //  หมุนกลุ่มก้อนวัตถุทั้งหมดตามแนววงโคจรหลัก
     mesh.rotation.y = t * 0.0003; 
     mesh.instanceMatrix.needsUpdate = true;
     
@@ -98,8 +98,8 @@ requestAnimationFrame(animateSplash);
 splash.addEventListener('click', () => {
     if (isExploding) return; 
     
-    isAssembling = false; // 🔥 สั่งปิดโหมดรวมร่างทันทีเพื่อให้วัตถุหลุดจากแรงดึงดูดเดิม
-    isExploding = true;   // 💥 เปิดโหมดระเบิดพุ่งกระจาย
+    isAssembling = false; //  สั่งปิดโหมดรวมร่างทันทีเพื่อให้วัตถุหลุดจากแรงดึงดูดเดิม
+    isExploding = true;   //  เปิดโหมดระเบิดพุ่งกระจาย
     
     splashContent.classList.add('blur-fade-out'); // สั่งให้ข้อความสลายตัวแบบดิจิทัล
 
