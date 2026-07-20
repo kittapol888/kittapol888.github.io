@@ -1,0 +1,210 @@
+:root {
+            --bg-main: #0a0e17;
+            --bg-card: #131a26;
+            --border-color: #222f47;
+            --accent-glow: #00e5ff;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        /* ================= 🌟 หน้าจอ Splash Screen แบบ 3D 🌟 ================= */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #050811; 
+            z-index: 9999;
+            transition: opacity 1.5s ease, visibility 1.5s ease;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        #splash-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none; 
+        }
+
+        /* คลาสปิดหน้าต่างหลังจากระเบิดเสร็จ */
+        #splash-screen.fade-out {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* จัดหน้าต่างเนื้อหาให้อยู่ตรงกลางจอเสมอ + รองรับอนิเมชันสลายตัว */
+        .splash-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1);
+            text-align: center;
+            z-index: 5; 
+            pointer-events: none;
+            width: 100%;
+            opacity: 1;
+            filter: blur(0px) brightness(1);
+            transition: opacity 1.4s cubic-bezier(0.25, 1, 0.5, 1), 
+                        filter 1.4s cubic-bezier(0.25, 1, 0.5, 1), 
+                        transform 1.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* ชื่อ KRITT  */
+        .splash-name {
+            font-size: 7rem;
+            font-weight: 900;
+            letter-spacing: 12px;
+            color: #ffffff;
+            text-shadow: 0 0 20px var(--accent-glow), 0 0 40px var(--accent-glow);
+            margin: 0;
+            display: inline-block;
+            animation: pulse-glow 2s infinite alternate;
+        }
+
+        .splash-hint {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            letter-spacing: 4px;
+            margin-top: 25px;
+            opacity: 0.8;
+            text-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
+            text-transform: uppercase;
+        }
+
+        /* [EFFECT] สลายข้อความให้แตกตัวเป็นละอองแสงและเบลอหายไปอย่างนุ่มนวล */
+        .blur-fade-out {
+            opacity: 0 !important;
+            filter: blur(25px) brightness(2) !important;
+            transform: translate(-50%, -50%) scale(1.1) !important;
+        }
+
+        @keyframes pulse-glow {
+            from { transform: scale(0.98); text-shadow: 0 0 15px var(--accent-glow); }
+            to { transform: scale(1.02); text-shadow: 0 0 35px var(--accent-glow), 0 0 60px var(--accent-glow); }
+        }
+
+        /* =================  หน้าเว็บพอร์ตโฟลิโอหลัก ================= */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 14, 23, 0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 50px;
+            box-sizing: border-box;
+            z-index: 1000;
+        }
+
+        nav .logo { font-size: 1.3rem; font-weight: bold; color: var(--accent-glow); letter-spacing: 1px; }
+        nav ul { display: flex; list-style: none; margin: 0; padding: 0; }
+        nav ul li { margin-left: 30px; }
+        nav ul li a { color: var(--text-secondary); text-decoration: none; font-size: 0.95rem; transition: 0.3s; }
+        nav ul li a:hover { color: var(--accent-glow); }
+
+        .hero {
+            min-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 120px 20px 60px 20px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin: 0;
+            background: linear-gradient(45deg, #fff, var(--accent-glow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px 100px 20px; }
+        section { padding: 60px 0; border-top: 1px solid var(--border-color); }
+        .section-title { font-size: 2rem; color: #fff; margin-bottom: 40px; position: relative; }
+        .section-title::after { content: ''; position: absolute; left: 0; bottom: -8px; width: 50px; height: 3px; background-color: var(--accent-glow); }
+        .cv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        
+        .card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .card h3 { color: var(--accent-glow); margin-top: 0; }
+        .badge { background: rgba(0, 229, 255, 0.1); color: var(--accent-glow); padding: 6px 14px; border-radius: 8px; font-size: 0.85rem; display: inline-block; margin: 5px; border: 1px solid rgba(0, 229, 255, 0.2); }
+        
+        .showcase-card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; padding: 40px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 20px 40px rgba(0,0,0,0.7); }
+        .canvas-wrapper { position: relative; background: #000; padding: 10px; border-radius: 12px; box-shadow: 0 0 30px rgba(0, 229, 255, 0.2); margin-top: 20px; }
+        
+        #canvas { background-color: #000000; border: 2px solid var(--border-color); border-radius: 6px; display: block; cursor: crosshair; }
+        
+        @media (max-width: 768px) {
+            .cv-grid { grid-template-columns: 1fr; }
+            nav ul { display: none; }
+            .splash-name { font-size: 4rem; }
+        }
+
+#hero-title span {
+    display: inline-block;
+    /* ใช้ cubic-bezier เพื่อให้การเด้งมีแรงสะท้อน */
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                color 0.2s, 
+                text-shadow 0.2s;
+    cursor: default;
+}
+
+.hero h1 {
+    background: none !important;
+    -webkit-background-clip: initial !important;
+    -webkit-text-fill-color: initial !important;
+}
+
+#hero-title span {
+    display: inline-block;
+    transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: default;
+}
+
+/*  กำหนดสีแยกให้ชัดเจนตามดีไซน์แรก */
+#hero-title span.color-white {
+    color: #ffffff; /* "Hi, I'm Kittapol" จะเป็นสีขาวล้วนคมๆ */
+}
+
+
+/*  จังหวะเมาส์ชี้: เด้งใหญ่ขึ้น 50% โดยที่สียังคงชัดเจนไม่เพี้ยน */
+#hero-title span:hover {
+    transform: translateY(-15px) scale(1.50); 
+}
+
+/* ทำให้อักษรกลุ่มแรกค่อยๆ ประกอบตัวและเรืองแสงขึ้นมาตอนเปิดเว็บ */
+.splash-content {
+    animation: digital-assemble 2.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes digital-assemble {
+    0% {
+        opacity: 0;
+        filter: blur(20px) brightness(0);
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        filter: blur(0px) brightness(1);
+        transform: translate(-50%, -50%) scale(1);
+    }
+}

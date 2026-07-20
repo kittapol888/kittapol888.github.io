@@ -3,360 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kritt| Portfolio - CV</title>
-    <style>
-        /* Modern Dark Theme Style */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #1e1e1e;
-            color: #d4d4d4;
-            margin: 0;
-            padding: 40px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+    <title>Kittapol | Interactive Graphics Portfolio</title>
+    
+    <!--  นำเข้าไลบรารี Three.js สำหรับรันฉากหลัง 3D (ห้ามลบอันนี้!) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
-        .main-title {
-            color: #61afef;
-            margin-bottom: 30px;
-            font-size: 2.5rem;
-            text-align: center;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
-
-        .container {
-            max-width: 1200px;
-            width: 100%;
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 30px;
-        }
-
-        @media (max-width: 900px) {
-            .container {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Card Layout */
-        .cv-card, .canvas-card {
-            background-color: #252526;
-            border: 1px solid #3c3c3c;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-        }
-
-        h2 {
-            color: #98c379;
-            margin-top: 0;
-            border-bottom: 2px solid #3c3c3c;
-            padding-bottom: 10px;
-        }
-
-        h3 {
-            color: #e5c07b;
-        }
-
-        p, li {
-            line-height: 1.6;
-            font-size: 1.05rem;
-        }
-
-        .badge {
-            background-color: #2c313c;
-            color: #61afef;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            display: inline-block;
-            margin: 4px;
-            border: 1px solid #4b5263;
-        }
-
-        /* Canvas Container */
-        .canvas-card {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-        }
-
-        /* จัดระเบียบให้ตำแหน่ง Canvas  */
-        canvas {
-            background-color: #000000;
-            border: 3px solid #61afef;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-            margin-top: 20px;
-            cursor: crosshair;
-        }
-    </style>
+    <!--  เชื่อมต่อไฟล์ CSS ที่แยกออกไป (สไตล์ตกแต่งหน้าตา) -->
+    <link rel="stylesheet" href="css/style.css?v=1.1">
 </head>
 <body>
 
-    <h1 class="main-title">Interactive Computer Graphics Showcase</h1>
-
-    <div class="container">
-        
-        <!-- ================= [ฝั่งที่ 1: หน้าต่าง CV ] ================= -->
-        <div class="cv-card">
-            <h2>👤 ข้อมูลผู้จัดทำ (CV)</h2>
-            <p><strong>ชื่อ-นามสกุล:</strong> นายกฤตพล เสงี่ยมงาม</p>
-            <p><strong>รหัสนิสิต:</strong> 6721600951 </p>
-            <p><strong>หมู่เรียน:</strong> 700</p>
-            
-            <h3>🛠️ Skills & Technologies</h3>
-            <div>
-                <span class="badge">HTML5 </span>
-                <span class="badge">JavaScript </span>
-                <span class="badge">Computer Graphics</span>
-                <span class="badge">Git / GitHub</span>
-            </div>
-
-            <h3>🎮 Keyboard & Mouse Interaction</h3>
-            <p>สามารถทดสอบระบบการแปลงพิกัดรูปภาพ (Transformation) บนหน้าจอฝั่งขวาได้ดังนี้ครับ:</p>
-            <ul>
-                <li><strong>Translation:</strong> ขยับเมาส์หรือกดปุ่ม W, A, S, D เพื่อเลื่อนตำแหน่ง Sprite 24-bit ตามพิกัดตัวชี้</li>
-                <li><strong>Scaling / Rotation:</strong> กดปุ่มลูกศรเพื่อหมุนหรือปรับขนาด Sprite</li>
-            </ul>
+    <!--  หน้าจอ Splash Screen พร้อมฉากหลัง Three.js -->
+    <div id="splash-screen">
+        <canvas id="splash-canvas"></canvas>
+        <div class="splash-content" id="splash-content">
+            <h1 class="splash-name">KRITT</h1>
+            <p class="splash-hint"> CLICK IF YOU'RE INTERESTED </p>
         </div>
-
-        <!-- ================= [ฝั่งที่ 2: หน้าต่างแสดงงานกราฟิก] ================= -->
-        <div class="canvas-card">
-            <h2>🖥️ หัวข้อ: 24-bit Sprite Transformation</h2>
-            
-            <canvas id="canvas" width="500" height="500"></canvas>
-            
-        </div>
-
     </div>
 
-    <script>
-        // โค้ด JavaScript/Canvas เดิมของนายทั้งหมด วางยาวลงไปตรงนี้ได้เลยครับ...
-        const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-const imageData = ctx.createImageData(canvas.width, canvas.height);
-const pixels = imageData.data; 
+    <!-- Navigation Header -->
+    <nav>
+        <div class="logo">KRITT</div>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#cv">About & CV</a></li>
+            <li><a href="#graphics">Graphics Project</a></li>
+        </ul>
+    </nav>
 
-function putPixel(x, y, r, g, b, a = 255) {
-  if (x < 0 || x >= canvas.width || y < 0 || y >= canvas.height) return; 
-  const index = (y * canvas.width + x) * 4; 
-  pixels[index] = r;
-  pixels[index + 1] = g;
-  pixels[index + 2] = b;
-  pixels[index + 3] = a;
-}
-function drawLine(x1, y1, x2, y2, r, g, b, a = 255) {
-  const dx = Math.abs(x2 - x1);
-  const dy = Math.abs(y2 - y1);
-  if(dx > dy) {
-    const m = (y2 - y1) / (x2 - x1);
-    const c = y1 - m * x1;
-    for (let x = Math.min(x1, x2); x <= Math.max(x1, x2); x++) {
-      const y = Math.round(m * x + c);
-      putPixel(x, y, r, g, b, a);
-    }
-  } else {
-    const m = (x2 - x1) / (y2 - y1);
-    const c = x1 - m * y1;
-    for (let y = Math.min(y1, y2); y <= Math.max(y1, y2); y++) {
-      const x = Math.round(m * y + c);
-      putPixel(x, y, r, g, b, a);
-    }
-  }
-}
+    <!--  Hero Section -->
+    <header class="hero" id="home">
+    <h1 id="hero-title">Hi, I'm Kittapol</h1>
+    <p style="font-size: 1.2rem; color: var(--text-secondary); max-width: 600px; margin-top: 15px;"> ยินดีต้อนรับสู่พอร์ตโฟลิโอส่งงานของผมครับ</p>
+</header>
 
-function drawRect(x1, y1, x2, y2, r, g, b, a = 255){
-    drawLine(x1, y1, x2, y1, r, g, b, a); // Top
-    drawLine(x2, y1, x2, y2, r, g, b, a); // Right
-    drawLine(x2, y2, x1, y2, r, g, b, a); // Bottom
-    drawLine(x1, y2, x1, y1, r, g, b, a); // Left
-}
+    <div class="container">
+        <!--  Section 1: About & CV -->
+        <section id="cv">
+            <h2 class="section-title">About & CV</h2>
+            <div class="cv-grid">
+                <div class="card">
+                    <h3>Personal Info</h3>
+                    <p><strong>Name:</strong> กฤตพล เสงี่ยมงาม</p>
+                    <p><strong>Email:</strong> krittapol20@gmail.com</p>
+                    <p><strong>tel</strong> 083-880-7628</p>
+                   
+        <a href="https://github.com/kittapol888/kittapol888.github.io" target="_blank" style="color: var(--accent-glow); text-decoration: none; font-weight: bold; border-bottom: 1px dashed var(--accent-glow); transition: 0.3s; display: inline-flex; align-items: center; gap: 8px;">
+            <!-- โค้ด SVG ไอคอน GitHub -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16" style="margin-bottom: -2px;">
+                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/>
+            </svg>
+            github.com
+        </a>
+    </p>
+                </div>
+                <div class="card">
+                    <h3>Core Skills</h3>
+                    <div style="margin-bottom: 15px;">
+                        <span class="badge">HTML5 </span>
+                        <span class="badge">JavaScript (ES6)</span>
+                        <span class="badge">Three.js (WebGL)</span>
+                        <span class="badge">Git & GitHub</span>
+                    </div>
+                   
+                  
+                </div>
+            </div>
+        </section>
 
+        <!-- 🖥️ Section 2: Interactive Computer Graphics Project -->
+        <section id="graphics">
+            <h2 class="section-title">Interactive Computer Graphics</h2>
+            <div class="showcase-card">
+                <h3> 24-bit Transformation</h3>
+                <p style="color: var(--text-secondary); text-align: center; max-width: 700px; margin-bottom: 25px;">
+                    ระบบสาธิตการทำงานแปลงพิกัดวัตถุผ่านโครงสร้างข้อมูล Buffer บนจอ Canvas โดยจำลองการประมวลผลเม็ดพิกเซลแบบอิสระ รองรับการโต้ตอบแบบ Real-time
+                </p>
 
-function drawRectFilled(x1, y1, x2, y2, r, g, b, a = 255){
-    for(let y = y1; y <= y2; y++){
-        for(let x = x1; x <= x2; x++){
-            putPixel(x, y, r, g, b, a);
-        }
-    }
-}
+                <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px;">
+                    <span class="badge" style="color: #fff;">🖱️ Mouse: เลื่อนตำแหน่ง (Translate)</span>
+                    <span class="badge" style="color: #fff;">⌨️ Keyboard: [w, a, s, d เพื่อขยับ ปุ่มลูกศร บน-ล่าง ใช้ปรับขนาด และ ปุ่มลูกศร ซ้าย-ขวาใช้หมุนตามทิศทาง]</span>
+                </div>
 
-function drawRectGradient(x1, y1, x2, y2, r1, g1, b1, r2, g2, b2, a = 255){
-    for(let y = y1; y <= y2; y++){
-        let t = (y - y1) / (y2 - y1);
-        let cr = Math.round(r1 * (1 - t) + r2 * t);
-        let cg = Math.round(g1 * (1 - t) + g2 * t);
-        let cb = Math.round(b1 * (1 - t) + b2 * t);
-        for(let x = x1; x <= x2; x++){
-            putPixel(x, y, cr, cg, cb, a);
-        }
-    }
-}
+                <div class="canvas-wrapper">
+                    <canvas id="canvas" width="500" height="500"></canvas>
+                </div>
+            </div>
+        </section>
+    </div>
 
-function drawEllipse(cx, cy, rx, ry, r, g, b, a = 255) {
-    for (let y = -ry; y <= ry; y++) {
-        for (let x = -rx; x <= rx; x++) {
-            if ((x * x) / (rx * rx) + (y * y) / (ry * ry) < 1) {
-                putPixel(cx + x, cy + y, r, g, b, a);
-            }
-        }
-    }
-}
-
-const spaceInvaderSprite = [
-    [0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-    [0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1],
-    [0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1],
-    [0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1],
-    [0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1],
-    [0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1],
-    [0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1],
-    [0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 0],
-    [1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1],
-    [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-    [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
-    [0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0],
-    [0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0]
-];
-
-const smileySprite = [
-    [0, 0, 1, 1, 1, 1, 0, 0],
-    [0, 1, 0, 0, 0, 0, 1, 0],
-    [1, 0, 1, 0, 0, 1, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 1, 0, 0, 1, 0, 1],
-    [1, 0, 0, 1, 1, 0, 0, 1],
-    [0, 1, 0, 0, 0, 0, 1, 0],
-    [0, 0, 1, 1, 1, 1, 0, 0]
-];
-
-// 24-bit Sprite ***
-const smileSprite24Bit32x32 = [
-  [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null, null, null, null, null, 0xC76A08, 0xC76A08, 0xC76A08, 0xC76A08, 0xC76A08, 0xC76A08, 0xC76A08, 0xC76A08, null, null, null, null, null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null, null, 0xC76A08, 0xC76A08, 0xC76A08, 0xC76A08, 0xFFDF48, 0xFFDF48, 0xFFDF48, 0xFFDF48, 0xFFDF48, 0xFFDF48, 0xC76A08, 0xC76A08, 0xC76A08, 0xC76A08, null, null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null, 0xC76A08, 0xC76A08, 0xFFDE47, 0xFFDE47, 0xFFDE47, 0xFFDE47, 0xFFDE47, 0xFFDE47, 0xFFDE47, 0xFFDE47, 0xFFDE47, 0xFFDE47, 0xFFDE47, 0xFFDE47, 0xC76A08, 0xC76A08, null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, 0xC76A08, 0xC76A08, 0xFFDD45, 0xFFDD45, 0xFFDD45, 0xFFDD45, 0xFFDD45, 0xFFDD45, 0xFFDD45, 0xFFDD45, 0xFFDD45, 0xFFDD45, 0xFFDD45, 0xFFDD45, 0xFFDD45, 0xFFDD45, 0xFFDD45, 0xFFDD45, 0xC76A08, 0xC76A08, null, null, null, null, null, null],
-  [null, null, null, null, null, 0xC76A08, 0xC76A08, 0xFFDC44, 0xFFDC44, 0xFFDC44, 0xFFDC44, 0xFFDC44, 0xFFDC44, 0xFFDC44, 0xFFDC44, 0xFFDC44, 0xFFDC44, 0xFFDC44, 0xFFDC44, 0xFFDC44, 0xFFDC44, 0xFFDC44, 0xFFDC44, 0xFFDC44, 0xFFDC44, 0xC76A08, 0xC76A08, null, null, null, null, null],
-  [null, null, null, null, 0xC76A08, 0xC76A08, 0xFFDA43, 0xFFDA43, 0xFFDA43, 0xFFDA43, 0xFFDA43, 0xFFDA43, 0xFFDA43, 0xFFDA43, 0xFFDA43, 0xFFDA43, 0xFFDA43, 0xFFDA43, 0xFFDA43, 0xFFDA43, 0xFFDA43, 0xFFDA43, 0xFFDA43, 0xFFDA43, 0xFFDA43, 0xFFDA43, 0xC76A08, 0xC76A08, null, null, null, null],
-  [null, null, null, null, 0xC76A08, 0xFFD942, 0xFFD942, 0xFFD942, 0xFFD942, 0xFFD942, 0xFFD942, 0xFFD942, 0xFFD942, 0xFFD942, 0xFFD942, 0xFFD942, 0xFFD942, 0xFFD942, 0xFFD942, 0xFFD942, 0xFFD942, 0xFFD942, 0xFFD942, 0xFFD942, 0xFFD942, 0xFFD942, 0xFFD942, 0xC76A08, null, null, null, null],
-  [null, null, null, 0xC76A08, 0xFFD841, 0xFFD841, 0xFFD841, 0xFFD841, 0xFFD841, 0xFFD841, 0xFFD841, 0xFFD841, 0xFFD841, 0xFFD841, 0xFFD841, 0xFFD841, 0xFFD841, 0xFFD841, 0xFFD841, 0xFFD841, 0xFFD841, 0xFFD841, 0xFFD841, 0xFFD841, 0xFFD841, 0xFFD841, 0xFFD841, 0xFFD841, 0xC76A08, null, null, null],
-  [null, null, 0xC76A08, 0xC76A08, 0xFFD640, 0xFFD640, 0xFFD640, 0xFFD640, 0xFFD640, 0x3B2507, 0x3B2507, 0x3B2507, 0xFFD640, 0xFFD640, 0xFFD640, 0xFFD640, 0xFFD640, 0xFFD640, 0xFFD640, 0xFFD640, 0x3B2507, 0x3B2507, 0x3B2507, 0xFFD640, 0xFFD640, 0xFFD640, 0xFFD640, 0xFFD640, 0xC76A08, 0xC76A08, null, null],
-  [null, null, 0xC76A08, 0xFFD53E, 0xFFD53E, 0xFFD53E, 0xFFD53E, 0xFFD53E, 0x3B2507, 0xFFFFFF, 0x3B2507, 0x3B2507, 0x3B2507, 0xFFD53E, 0xFFD53E, 0xFFD53E, 0xFFD53E, 0xFFD53E, 0xFFD53E, 0x3B2507, 0xFFFFFF, 0x3B2507, 0x3B2507, 0x3B2507, 0xFFD53E, 0xFFD53E, 0xFFD53E, 0xFFD53E, 0xFFD53E, 0xC76A08, null, null],
-  [null, null, 0xC76A08, 0xFFD43D, 0xFFD43D, 0xFFD43D, 0xFFD43D, 0xFFD43D, 0x3B2507, 0x3B2507, 0x3B2507, 0x3B2507, 0x3B2507, 0xFFD43D, 0xFFD43D, 0xFFD43D, 0xFFD43D, 0xFFD43D, 0xFFD43D, 0x3B2507, 0x3B2507, 0x3B2507, 0x3B2507, 0x3B2507, 0xFFD43D, 0xFFD43D, 0xFFD43D, 0xFFD43D, 0xFFD43D, 0xC76A08, null, null],
-  [null, 0xC76A08, 0xC76A08, 0xFFD33C, 0xFFD33C, 0xFFD33C, 0xFFD33C, 0xFFD33C, 0x3B2507, 0x3B2507, 0x3B2507, 0x3B2507, 0x3B2507, 0xFFD33C, 0xFFD33C, 0xFFD33C, 0xFFD33C, 0xFFD33C, 0xFFD33C, 0x3B2507, 0x3B2507, 0x3B2507, 0x3B2507, 0x3B2507, 0xFFD33C, 0xFFD33C, 0xFFD33C, 0xFFD33C, 0xFFD33C, 0xC76A08, 0xC76A08, null],
-  [null, 0xC76A08, 0xFFD13B, 0xFFD13B, 0xFFD13B, 0xFFD13B, 0xFFD13B, 0xFFD13B, 0xFFD13B, 0x3B2507, 0x3B2507, 0x3B2507, 0xFFD13B, 0xFFD13B, 0xFFD13B, 0xFFD13B, 0xFFD13B, 0xFFD13B, 0xFFD13B, 0xFFD13B, 0x3B2507, 0x3B2507, 0x3B2507, 0xFFD13B, 0xFFD13B, 0xFFD13B, 0xFFD13B, 0xFFD13B, 0xFFD13B, 0xFFD13B, 0xC76A08, null],
-  [null, 0xC76A08, 0xFFD03A, 0xFFD03A, 0xFFD03A, 0xFFD03A, 0xFFD03A, 0xFFD03A, 0xFFD03A, 0xFFD03A, 0xFFD03A, 0xFFD03A, 0xFFD03A, 0xFFD03A, 0xFFD03A, 0xFFD03A, 0xFFD03A, 0xFFD03A, 0xFFD03A, 0xFFD03A, 0xFFD03A, 0xFFD03A, 0xFFD03A, 0xFFD03A, 0xFFD03A, 0xFFD03A, 0xFFD03A, 0xFFD03A, 0xFFD03A, 0xFFD03A, 0xC76A08, null],
-  [null, 0xC76A08, 0xFFCF39, 0xFFCF39, 0xFFCF39, 0xFFCF39, 0xFFCF39, 0xFFCF39, 0xFFCF39, 0xFFCF39, 0xFFCF39, 0xFFCF39, 0xFFCF39, 0xFFCF39, 0xFFCF39, 0xFFCF39, 0xFFCF39, 0xFFCF39, 0xFFCF39, 0xFFCF39, 0xFFCF39, 0xFFCF39, 0xFFCF39, 0xFFCF39, 0xFFCF39, 0xFFCF39, 0xFFCF39, 0xFFCF39, 0xFFCF39, 0xFFCF39, 0xC76A08, null],
-  [null, 0xC76A08, 0xFFCD37, 0xFFCD37, 0xFFCD37, 0xFFCD37, 0xFFCD37, 0xF58B73, 0xFFCD37, 0xFFCD37, 0xFFCD37, 0xFFCD37, 0xFFCD37, 0xFFCD37, 0xFFCD37, 0xFFCD37, 0xFFCD37, 0xFFCD37, 0xFFCD37, 0xFFCD37, 0xFFCD37, 0xFFCD37, 0xFFCD37, 0xFFCD37, 0xF58B73, 0xFFCD37, 0xFFCD37, 0xFFCD37, 0xFFCD37, 0xFFCD37, 0xC76A08, null],
-  [null, 0xC76A08, 0xFFCC36, 0xFFCC36, 0xFFCC36, 0xF58B73, 0xF58B73, 0xF58B73, 0xF58B73, 0xF58B73, 0xFFCC36, 0xFFCC36, 0xFFCC36, 0xFFCC36, 0xFFCC36, 0xFFCC36, 0xFFCC36, 0xFFCC36, 0xFFCC36, 0xFFCC36, 0xFFCC36, 0xFFCC36, 0xF58B73, 0xF58B73, 0xF58B73, 0xF58B73, 0xF58B73, 0xFFCC36, 0xFFCC36, 0xFFCC36, 0xC76A08, null],
-  [null, 0xC76A08, 0xFFCB35, 0xFFCB35, 0xF58B73, 0xF58B73, 0xF58B73, 0xF58B73, 0xF58B73, 0xF58B73, 0xF58B73, 0xFFCB35, 0xFFCB35, 0xFFCB35, 0xFFCB35, 0xFFCB35, 0xFFCB35, 0xFFCB35, 0xFFCB35, 0xFFCB35, 0xFFCB35, 0xF58B73, 0xF58B73, 0xF58B73, 0xF58B73, 0xF58B73, 0xF58B73, 0xF58B73, 0xFFCB35, 0xFFCB35, 0xC76A08, null],
-  [null, 0xC76A08, 0xC76A08, 0xFFC934, 0xFFC934, 0xF58B73, 0xF58B73, 0xF58B73, 0xF58B73, 0xF58B73, 0xFFC934, 0xFFC934, 0xFFC934, 0xFFC934, 0xFFC934, 0xFFC934, 0xFFC934, 0xFFC934, 0xFFC934, 0xFFC934, 0xFFC934, 0xFFC934, 0xF58B73, 0xF58B73, 0xF58B73, 0xF58B73, 0xF58B73, 0xFFC934, 0xFFC934, 0xC76A08, 0xC76A08, null],
-  [null, null, 0xC76A08, 0xFFC833, 0xFFC833, 0xFFC833, 0xFFC833, 0xF58B73, 0xFFC833, 0x7A2E0B, 0x7A2E0B, 0xFFC833, 0xFFC833, 0xFFC833, 0xFFC833, 0xFFC833, 0xFFC833, 0xFFC833, 0xFFC833, 0xFFC833, 0xFFC833, 0x7A2E0B, 0x7A2E0B, 0xFFC833, 0xF58B73, 0xFFC833, 0xFFC833, 0xFFC833, 0xFFC833, 0xC76A08, null, null],
-  [null, null, 0xC76A08, 0xFFC732, 0xFFC732, 0xFFC732, 0xFFC732, 0xFFC732, 0xFFC732, 0x7A2E0B, 0x7A2E0B, 0x7A2E0B, 0x7A2E0B, 0xFFC732, 0xFFC732, 0xFFC732, 0xFFC732, 0xFFC732, 0xFFC732, 0x7A2E0B, 0x7A2E0B, 0x7A2E0B, 0x7A2E0B, 0xFFC732, 0xFFC732, 0xFFC732, 0xFFC732, 0xFFC732, 0xFFC732, 0xC76A08, null, null],
-  [null, null, 0xC76A08, 0xC76A08, 0xFFC630, 0xFFC630, 0xFFC630, 0xFFC630, 0xFFC630, 0xFFC630, 0x7A2E0B, 0x7A2E0B, 0x7A2E0B, 0x7A2E0B, 0x7A2E0B, 0x7A2E0B, 0x7A2E0B, 0x7A2E0B, 0x7A2E0B, 0x7A2E0B, 0x7A2E0B, 0x7A2E0B, 0xFFC630, 0xFFC630, 0xFFC630, 0xFFC630, 0xFFC630, 0xFFC630, 0xC76A08, 0xC76A08, null, null],
-  [null, null, null, 0xC76A08, 0xFFC42F, 0xFFC42F, 0xFFC42F, 0xFFC42F, 0xFFC42F, 0xFFC42F, 0xFFC42F, 0x7A2E0B, 0x7A2E0B, 0x7A2E0B, 0x7A2E0B, 0x7A2E0B, 0x7A2E0B, 0x7A2E0B, 0x7A2E0B, 0x7A2E0B, 0x7A2E0B, 0xFFC42F, 0xFFC42F, 0xFFC42F, 0xFFC42F, 0xFFC42F, 0xFFC42F, 0xFFC42F, 0xC76A08, null, null, null],
-  [null, null, null, null, 0xC76A08, 0xFFC32E, 0xFFC32E, 0xFFC32E, 0xFFC32E, 0xFFC32E, 0xFFC32E, 0xFFC32E, 0xFFC32E, 0x7A2E0B, 0x7A2E0B, 0x7A2E0B, 0x7A2E0B, 0x7A2E0B, 0x7A2E0B, 0xFFC32E, 0xFFC32E, 0xFFC32E, 0xFFC32E, 0xFFC32E, 0xFFC32E, 0xFFC32E, 0xFFC32E, 0xC76A08, null, null, null, null],
-  [null, null, null, null, 0xC76A08, 0xC76A08, 0xFFC22D, 0xFFC22D, 0xFFC22D, 0xFFC22D, 0xFFC22D, 0xFFC22D, 0xFFC22D, 0xFFC22D, 0xFFC22D, 0xFFC22D, 0xFFC22D, 0xFFC22D, 0xFFC22D, 0xFFC22D, 0xFFC22D, 0xFFC22D, 0xFFC22D, 0xFFC22D, 0xFFC22D, 0xFFC22D, 0xC76A08, 0xC76A08, null, null, null, null],
-  [null, null, null, null, null, 0xC76A08, 0xC76A08, 0xFFC02C, 0xFFC02C, 0xFFC02C, 0xFFC02C, 0xFFC02C, 0xFFC02C, 0xFFC02C, 0xFFC02C, 0xFFC02C, 0xFFC02C, 0xFFC02C, 0xFFC02C, 0xFFC02C, 0xFFC02C, 0xFFC02C, 0xFFC02C, 0xFFC02C, 0xFFC02C, 0xC76A08, 0xC76A08, null, null, null, null, null],
-  [null, null, null, null, null, null, 0xC76A08, 0xC76A08, 0xFFBF2B, 0xFFBF2B, 0xFFBF2B, 0xFFBF2B, 0xFFBF2B, 0xFFBF2B, 0xFFBF2B, 0xFFBF2B, 0xFFBF2B, 0xFFBF2B, 0xFFBF2B, 0xFFBF2B, 0xFFBF2B, 0xFFBF2B, 0xFFBF2B, 0xFFBF2B, 0xC76A08, 0xC76A08, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null, 0xC76A08, 0xC76A08, 0xFFBE29, 0xFFBE29, 0xFFBE29, 0xFFBE29, 0xFFBE29, 0xFFBE29, 0xFFBE29, 0xFFBE29, 0xFFBE29, 0xFFBE29, 0xFFBE29, 0xFFBE29, 0xC76A08, 0xC76A08, null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null, null, 0xC76A08, 0xC76A08, 0xC76A08, 0xC76A08, 0xFFBD28, 0xFFBD28, 0xFFBD28, 0xFFBD28, 0xFFBD28, 0xFFBD28, 0xC76A08, 0xC76A08, 0xC76A08, 0xC76A08, null, null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null, null, null, null, null, 0xC76A08, 0xC76A08, 0xC76A08, 0xC76A08, 0xC76A08, 0xC76A08, 0xC76A08, 0xC76A08, null, null, null, null, null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]
-];
-
-function drawSprite(sprite, x, y, r, g, b, a = 255) {
-    for (let j = 0; j < sprite.length; j++) {
-        for (let i = 0; i < sprite[j].length; i++) {
-            if (sprite[j][i] === 1) {
-                putPixel(x + i, y + j, r, g, b, a);
-            }
-        }
-    }
-}
-
-function drawSprite24BitRotationScale(sprite, targetX, targetY, deg, scaleX, scaleY) {
-  const sh = sprite.length;
-  const sw = sprite[0].length;
-  const rad = deg * Math.PI / 180;
-
-  for (let j = 0; j < sh; j++) {
-    for (let i = 0; i < sw; i++) {
-      const color = sprite[j][i];
-      if (color !== null) {
-        const sprR = (color >> 16) & 255;
-        const sprG = (color >> 8) & 255;
-        const sprB = color & 255;
-
-        const cX = i - sw / 2;
-        const cY = j - sh / 2;
-        
-        const x_rotated = cX * Math.cos(rad) - cY * Math.sin(rad);
-        const y_rotated = cX * Math.sin(rad) + cY * Math.cos(rad);
-
-        const finalX = Math.round(targetX + x_rotated * scaleX);
-        const finalY = Math.round(targetY + y_rotated * scaleY);
-
-        const rX = Math.max(1, Math.round(scaleX / 2));
-        const rY = Math.max(1, Math.round(scaleY / 2));
-        drawEllipse(finalX, finalY, rX, rY, sprR, sprG, sprB, 255);
-      }
-    }
-  }
-}
-
-let spriteX = 100; 
-let spriteY = 100;
-let scale = 1.0;
-let degree = 0;
-
-// Interaction: Translate (W, A, S, D), Rotate (Left/Right), Scale (Up/Down)
-window.addEventListener('keydown',(event)=>{
-    // Rotate
-    if (event.code === 'ArrowLeft') { degree -= 5; }
-    else if (event.code === 'ArrowRight') { degree += 5; }
+    <!--  เชื่อมต่อไฟล์ JavaScript ที่แยกออกไป (ห้ามสลับลำดับ!) -->
+    <!-- 1. ไฟล์ JS ของ Splash Screen (Three.js Background) -->
+    <script src="js/splash.js"></script>
     
-    // Scale
-    else if (event.code === 'ArrowUp') { scale += 0.1; }
-    else if (event.code === 'ArrowDown') { scale = Math.max(0.2, scale - 0.1); }
-    
-    // Translate
-    else if (event.code === 'KeyW') { spriteY -= 4; }
-    else if (event.code === 'KeyS') { spriteY += 4; }
-    else if (event.code === 'KeyA') { spriteX -= 4; }
-    else if (event.code === 'KeyD') { spriteX += 4; }
-});
-
-// Interaction: Follow Mouse
-canvas.addEventListener('mousemove', (event) => {
-    const rect = canvas.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    
-    // Map display coordinates to internal canvas resolution (200x200)
-    spriteX = Math.round(x * (canvas.width / rect.width));
-    spriteY = Math.round(y * (canvas.height / rect.height));
-});
-
-function animate(){
-  
-  drawRectFilled(0, 0, canvas.width - 1, canvas.height - 1, 255, 255, 255);
-  
-  
-  drawSprite24BitRotationScale(smileSprite24Bit32x32, spriteX, spriteY, degree, scale, scale);
-  
-  ctx.putImageData(imageData, 0, 0);
-  requestAnimationFrame(animate);
-}
-
-animate();
-    </script>
+    <!-- 2. ไฟล์ JS ของวิชาหลัก (Portfolio Canvas Graphics) -->
+    <script src="js/portfolio.js"></script>
 
 </body>
 </html>
