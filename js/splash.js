@@ -1,8 +1,12 @@
 const splash = document.getElementById('splash-screen');
 const splashContent = document.getElementById('splash-content');
+
 let isSplashActive = true;
 let isExploding = false; 
-let isAssembling = true; // สถานะเริ่มแรก: สั่งให้เศษชิ้นส่วนวิ่งมารวมร่างกันก่อน
+let isAssembling = true; 
+let targetSpeedFactor = 1.0;  // ความเร็วเป้าหมาย (1.0 = ปกติ, 0.15 = สโลว์)
+let currentSpeedFactor = 1.0; // ความเร็วปัจจุบันที่ระบบกำลังรันอยู่
+let customTime = 0;           // ตัวนับเวลาสะสมสำหรับหมุนกลุ่มก้อนหลัก
 
 // Setup ฉากหลัง 3D
 const cyberCanvas = document.getElementById('splash-canvas');
@@ -26,24 +30,20 @@ const boxData = [];
 const dummy = new THREE.Object3D(); 
 
 for(let i = 0; i < COUNT; i++){
-    //  1. คำนวณตำแหน่งเป้าหมายหลัก (จุดที่จะฟอร์มตัวโคจรรอบจุดศูนย์กลาง)
     const targetX = (Math.random() - .5) * 20;
     const targetY = (Math.random() - .5) * 20;
     const targetZ = (Math.random() - .5) * 20;
     const targetPosition = new THREE.Vector3(targetX, targetY, targetZ);
 
-    //  2. คำนวณตำแหน่งเกิด (ดีดให้เศษชิ้นส่วนกระจัดกระจายไปไกลๆ นอกจอในตอนแรก)
-    // คูณด้วย 30-50 เพื่อให้อยู่ลึกเข้าไปในอวกาศแล้วค่อยบินเข้ามา
     const spawnPosition = targetPosition.clone().normalize().multiplyScalar(35 + Math.random() * 25);
 
-    //  3. เวกเตอร์ทิศทางสำหรับการระเบิดออกตอนโดนคลิก
     const velocity = targetPosition.clone().normalize();
     const speed = 0.25 + Math.random() * 0.35; 
     velocity.multiplyScalar(speed);
 
     boxData.push({
-        currentPosition: spawnPosition.clone(), // เริ่มต้นวัตถุที่พิกัดกระจายตัวรอบนอก
-        targetPosition: targetPosition,        // พิกัดที่จะเข้ามารวมร่าง
+        currentPosition: spawnPosition.clone(),
+        targetPosition: targetPosition,        
         rotation: new THREE.Vector3(Math.random() * Math.PI, Math.random() * Math.PI, 0),
         rotSpeed: new THREE.Vector3(
             (Math.random() - 0.5) * 0.04,
@@ -63,19 +63,19 @@ for(let i = 0; i < COUNT; i++){
 function animateSplash(t){
     if (!isSplashActive) return; 
     
+    // จูนความเร็ว: ค่อยๆ ชะลอหรือเร่งความเร็วแบบนุ่มนวล
+    currentSpeedFactor += (targetSpeedFactor - currentSpeedFactor) * 0.08;
+    
     for(let i = 0; i < COUNT; i++) {
         const data = boxData[i];
 
-        //  หมุนอิสระในตัวเองแต่ละกล่อง
-        data.rotation.x += data.rotSpeed.x;
-        data.rotation.y += data.rotSpeed.y;
-        data.rotation.z += data.rotSpeed.z;
+        data.rotation.x += data.rotSpeed.x * currentSpeedFactor;
+        data.rotation.y += data.rotSpeed.y * currentSpeedFactor;
+        data.rotation.z += data.rotSpeed.z * currentSpeedFactor;
 
         if (isAssembling) {
-            //  [MODE: รวมร่าง] ค่อยๆ ดูดเศษชิ้นส่วนจากนอกจอกลับเข้ามาหาพิกัดเป้าหมายด้วยความนุ่มนวล (Lerp 4% ต่อเฟรม)
-            data.currentPosition.lerp(data.targetPosition, 0.04);
+            data.currentPosition.lerp(data.targetPosition, 0.04 * currentSpeedFactor);
         } else if (isExploding) {
-            //  [MODE: ระเบิด] สั่งให้พุ่งกระจายออกจากศูนย์กลางรอบทิศทาง
             data.currentPosition.add(data.velocity);
         }
 
@@ -85,31 +85,36 @@ function animateSplash(t){
         mesh.setMatrixAt(i, dummy.matrix);
     }
     
-    //  หมุนกลุ่มก้อนวัตถุทั้งหมดตามแนววงโคจรหลัก
-    mesh.rotation.y = t * 0.0003; 
+    customTime += 0.005 * currentSpeedFactor; 
+    mesh.rotation.y = customTime; 
+    
     mesh.instanceMatrix.needsUpdate = true;
     
     renderer.render(scene, camera);
     requestAnimationFrame(animateSplash);
 }
+
+// 🛑 [จุดที่หายไป] เรียกใช้ฟังก์ชันเพื่อเริ่มเล่นแอนิเมชัน 3D ทันทีที่โหลดหน้าเว็บ
 requestAnimationFrame(animateSplash);
 
 // เมื่อคลิกหน้าจอ: สลายตัวหนังสือ และระเบิดกล่องออกไป
 splash.addEventListener('click', () => {
     if (isExploding) return; 
     
-    isAssembling = false; //  สั่งปิดโหมดรวมร่างทันทีเพื่อให้วัตถุหลุดจากแรงดึงดูดเดิม
-    isExploding = true;   //  เปิดโหมดระเบิดพุ่งกระจาย
+    isAssembling = false; 
+    isExploding = true;   
+    targetSpeedFactor = 1.0; // คืนค่าความเร็วปกติทันทีเพื่อให้กล่องระเบิดพุ่งออกไปอย่างรวดเร็ว
+    splash.classList.remove('bg-focused'); // เคลียร์เอฟเฟกต์เบลอออก
     
-    splashContent.classList.add('blur-fade-out'); // สั่งให้ข้อความสลายตัวแบบดิจิทัล
+    splashContent.classList.add('blur-fade-out'); 
 
-    // ทิ้งช่วงเวลาให้เห็นเอฟเฟกต์การระเบิดและการจางหายอย่างสมูท 1.4 วินาที
     setTimeout(() => {
         splash.classList.add('fade-out');
         setTimeout(() => {
             isSplashActive = false; 
+            splash.style.display = 'none'; // 🛑 ซ่อนแผงล่องหนออกไป เมาส์จะได้กดหน้าเว็บหลักได้
         }, 1500);
-    }, 1400);
+    }, 700);
 });
 
 // Responsive จอคอมพิวเตอร์
@@ -119,10 +124,10 @@ window.addEventListener('resize', () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
- document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
     const heroTitle = document.getElementById('hero-title');
     if (heroTitle) {
-        const text = heroTitle.textContent; // ดึงคำว่า "Hi, I'm Kittapol"
+        const text = heroTitle.textContent; 
         heroTitle.innerHTML = text.split('').map((char, index) => {
             if (char === ' ') return '<span>&nbsp;</span>';
             
@@ -133,3 +138,26 @@ window.addEventListener('resize', () => {
         }).join('');
     }
 });
+
+// ==========================================================
+// 🎮 กิมมิคสลับข้อความ + ดึงโฟกัสฉากหลังเบลอมืด + ระบบสโลว์โมชัน
+// ==========================================================
+const splashHint = document.querySelector('.splash-hint');
+
+if (splashHint) {
+    splashHint.addEventListener('mouseenter', () => {
+        if (!isExploding) { 
+            splashHint.textContent = "I WILL SHOW YOU SOMETHING AMAZING";
+            splash.classList.add('bg-focused'); 
+            targetSpeedFactor = 0.15; // ห้วงเวลาสโลว์โมชัน
+        }
+    });
+    
+    splashHint.addEventListener('mouseleave', () => {
+        if (!isExploding) {
+            splashHint.textContent = "CLICK IF YOU'RE INTERESTED";
+            splash.classList.remove('bg-focused'); 
+            targetSpeedFactor = 1.0;  // ดีดเวลากลับมาปกติ
+        }
+    });
+}

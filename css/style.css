@@ -84,14 +84,47 @@
             opacity: 0.8;
             text-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
             text-transform: uppercase;
+
+
+    display: inline-block;        /* ทำให้เอฟเฟกต์ Scale ทำงานได้สมบูรณ์ */
+    pointer-events: auto;         /* [จุดสำคัญ] สั่งให้เมาส์ชี้ตัวนี้ติด ไม่ทะลุผ่าน */
+    cursor: pointer;              /* เปลี่ยนเมาส์เป็นรูปมือเวลาชี้ */
+
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                color 0.3s ease, 
+                text-shadow 0.3s ease, 
+                opacity 0.3s ease,
+                letter-spacing 0.3s ease;
+
         }
+
+        /* เอฟเฟกต์ตอนเมาส์ชี้ (Hover) */
+.splash-hint:hover {
+    color: #ffffff;
+    opacity: 1;
+    transform: scale(1.12); /* ขยายใหญ่ขึ้นนิดนึงให้รู้ว่าชี้อยู่ */
+    letter-spacing: 6px;    /* ยืดตัวอักษรออกกว้างขึ้นฟีลไฮเทค */
+    text-shadow: 0 0 15px var(--accent-glow), 0 0 30px var(--accent-glow); /* เรืองแสงวาบจัดเต็ม */
+}
 
         /* [EFFECT] สลายข้อความให้แตกตัวเป็นละอองแสงและเบลอหายไปอย่างนุ่มนวล */
         .blur-fade-out {
-            opacity: 0 !important;
-            filter: blur(25px) brightness(2) !important;
-            transform: translate(-50%, -50%) scale(1.1) !important;
-        }
+    animation: digital-disintegrate 0.9s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
+    pointer-events: none;
+}
+
+@keyframes digital-disintegrate {
+    0% {
+        opacity: 1;
+        filter: blur(0px) brightness(1);
+        transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+        opacity: 0;
+        filter: blur(25px) brightness(2.5); /* เรืองแสงวาบดิจิทัลแล้วละลายหายไป */
+        transform: translate(-50%, -50%) scale(1.15); /* ขยายใหญ่ขึ้นเล็กน้อยตอนบึ้ม */
+    }
+}
 
         @keyframes pulse-glow {
             from { transform: scale(0.98); text-shadow: 0 0 15px var(--accent-glow); }
@@ -209,4 +242,16 @@
     }
 }
 
+/* ==========================================================
+    เอฟเฟกต์เบลอ + ดรอปแสงฉากหลัง 3D (Focus Pull Effect)
+   ========================================================== */
 
+/* 1. สั่งให้ Canvas 3D เตรียมตัวรับการปรับเอฟเฟกต์แบบเนียนๆ */
+#splash-screen canvas {
+    transition: filter 0.6s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+/* 2. เมื่อเกิดสถานะ bg-focused -> ให้ฉากหลังเบลอ 8px และมืดลง 30% */
+#splash-screen.bg-focused canvas {
+    filter: blur(8px) brightness(0.7) !important;
+}
